@@ -20,8 +20,8 @@ public class RuneHandler : MonoBehaviour
             currRune.Deactivate();
         }
 
-
         _audioManager = FindObjectOfType<AudioManager>();
+        if (!_audioManager) Debug.LogError("NO AUDIO MANAGER FOUND");
     }
 
     public void Activate(InteractableRune rune,bool activated)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RuneElevator : MonoBehaviour
 {
-    [SerializeField] private List<Transform> _levelList = new List<Transform>();
+    [SerializeField] private List<Transform> _levelList = new List<Transform>(); //different levels for the lift to be at
     private int _currentLevel=0;
     [SerializeField] private float _lerpSpeed = 3;
     [SerializeField] private string _soundName = "WoodenLift";
@@ -22,12 +22,11 @@ public class RuneElevator : MonoBehaviour
     {
         if (isActivated)
         {
-            _currentLevel++;
-
+            _currentLevel++; //increase lift level
         }
         else
         {
-           _currentLevel=0;
+           _currentLevel=0; //drop lift to ground
         }
 
         _audioManager.Play(_soundName);
