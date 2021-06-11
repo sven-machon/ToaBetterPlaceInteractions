@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class RuneElevator : MonoBehaviour
 {
+    #region Editor fields
     [SerializeField] private List<Transform> _levelList = new List<Transform>(); //different levels for the lift to be at
-    private int _currentLevel=0;
     [SerializeField] private float _lerpSpeed = 3;
     [SerializeField] private string _soundName = "WoodenLift";
+    #endregion
+
+    #region Fields
     private AudioManager _audioManager = null;
+    private int _currentLevel=0;
+    #endregion
 
-
+    #region Methods
     private void Start()
     {
         _audioManager = FindObjectOfType<AudioManager>();
     }
 
-
-
-    public void ElevatorUp(bool isActivated)
+    public void ElevatorInteraction(bool succes)
     {
-        if (isActivated)
+        if (succes)
         {
             _currentLevel++; //increase lift level
         }
@@ -35,7 +38,7 @@ public class RuneElevator : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, _levelList[_currentLevel].position) > 0.5f) 
+        if (( _levelList[_currentLevel].position- transform.position ).sqrMagnitude > 0.5f) 
         {
             //move lift towards current level
             transform.position = Vector3.Slerp(transform.position, _levelList[_currentLevel].position, _lerpSpeed * Time.deltaTime);
@@ -45,6 +48,5 @@ public class RuneElevator : MonoBehaviour
                 _audioManager.StopPlaying(_soundName);
         }
     }
-
-
+    #endregion
 }

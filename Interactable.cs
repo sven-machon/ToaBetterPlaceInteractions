@@ -11,15 +11,19 @@ public class Interactable : MonoBehaviour
         carryObject = 2
     }
 
+    #region Editor fields
     [SerializeField] private int _requiredPlayers = 1;
     [SerializeField] private UnityEvent<GameObject> _interactEvent = null; //event that will handle the behaviour of the interactable
     [SerializeField] private ParentAnimation _animState = ParentAnimation.nothing;
     [SerializeField] private bool _isElderFriendly = true;
+    #endregion
 
+    #region Fields
     protected bool _isSelected;
     private bool _isLocked;
     private List<GameObject> _playersSelectedByList = new List<GameObject>();
     private MeshRenderer _meshRenderer = new MeshRenderer();
+    #endregion
 
     #region properties
     public bool IsSelected() { return _isSelected; }
@@ -32,9 +36,10 @@ public class Interactable : MonoBehaviour
     }
     #endregion //properties
 
+    #region Methods
     protected void Start()
     {
-        TryGetComponent<MeshRenderer>(out _meshRenderer);
+        TryGetComponent<MeshRenderer> (out _meshRenderer);
     }
 
     public int Interact(GameObject player)
@@ -66,5 +71,5 @@ public class Interactable : MonoBehaviour
         _playersSelectedByList.Remove(player);
         _isSelected = false;
     }
-
+    #endregion
 }

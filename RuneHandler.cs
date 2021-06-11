@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class RuneHandler : MonoBehaviour
 {
-    [SerializeField] private List<InteractableRune> _runesLinked = null; //the runes that control the object
-    [SerializeField] private int _currentLevel=0;
+    #region Editor fields
+    [SerializeField] private List<Rune> _runesLinked = null; //the runes that control the object
     [SerializeField] private Activatable _linkedObject = null; //object to control
-    private AudioManager _audioManager = null;
     [SerializeField] private string _correctSound = "CorrectRune";
     [SerializeField] private string _wrongSound = "BadRune";
+    #endregion
 
+    #region Fields
+    private AudioManager _audioManager = null;
+    private int _currentRuneIdx=0;
+    #endregion
 
+    #region Methods
     private void Start()
     {
-        foreach (InteractableRune currRune in _runesLinked)
+        foreach (Rune currRune in _runesLinked)
         {
             currRune.SetHandler(this);
             currRune.Deactivate();
@@ -24,15 +29,15 @@ public class RuneHandler : MonoBehaviour
         if (!_audioManager) Debug.LogError("NO AUDIO MANAGER FOUND");
     }
 
-    public void Activate(InteractableRune rune,bool activated)
+    public void Activate(Rune rune,bool activated)
     {
         if (activated) //if the rune was already activated, break elevator and reset all
         {
-            foreach(InteractableRune currRune in _runesLinked) //deactivate all runes
+            foreach(Rune currRune in _runesLinked) //deactivate all runes
             {
                 currRune.Deactivate();
             }
-            _currentLevel = 0;
+            _currentRuneIdx = 0;
             _audioManager.Play(_wrongSound);
 
             // let linked object know Runes broke
@@ -41,11 +46,11 @@ public class RuneHandler : MonoBehaviour
         }
         else
         {
-            if (_runesLinked.IndexOf(rune) == _currentLevel) // if rune is next in list, succesful activation
+            if (_runesLinked.IndexOf(rune) == _currentRuneIdx) // if rune is next in list, succesful activation
             {
                 _audioManager.Play(_correctSound);
                 rune.Activate();
-                _currentLevel++;
+                _currentRuneIdx++;
 
                 // let linked object know succesful activation
                 if (_linkedObject)
@@ -56,7 +61,7 @@ public class RuneHandler : MonoBehaviour
             {
                 rune.Activate();
                 _audioManager.Play(_wrongSound);
-                _currentLevel++;
+                _currentRuneIdx++;
                 StartCoroutine(Deactivate()); //break the elevator after a short delay
             }
         }
@@ -67,11 +72,11 @@ public class RuneHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        foreach (InteractableRune currRune in _runesLinked) //deactivate all runes
+        foreach (Rune currRune in _runesLinked) //deactivate all runes
         {
             currRune.Deactivate();
         }
-        _currentLevel = 0;
+        _currentRuneIdx = 0;
 
         // let linked object know Runes broke
         if (_linkedObject)
@@ -82,9 +87,10 @@ public class RuneHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (InteractableRune currRune in _runesLinked)
+        foreach (Rune currRune in _runesLinked)
         {
             currRune.GetComponent<Interactable>().enabled = true;
         }
     }
+    #endregion
 }
